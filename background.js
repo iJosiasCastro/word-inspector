@@ -18,7 +18,7 @@
   
       gapi.client.request(params)
         .then((res) => {
-          sendResponse(res.result.dictionaryData);
+          sendResponse(res.result.dictionaryData[0]);
         })
         .catch((error) => {
           console.error("Fetch error:", error);
