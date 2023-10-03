@@ -27,5 +27,5 @@
    "options_page": "options.html",
    "permissions": [ "storage" ],
    "version": "4.1.8",
-   "web_accessible_resources": [ "content.css", "templates/browser_action_dict.html" ]
+   "web_accessible_resources": [ "content.css", "templates/browser_action_dict.html", "templates/browser_action.min.css" ]
 }
