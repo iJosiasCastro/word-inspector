@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <title>Fullscreen Element</title>
+    <style>
+      /* Style the element to be fullscreened */
+      #fullscreen-element {
+        width: 100%;
+        height: 300px; /* You can adjust the height as needed */
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+
+  <body class="m-5">
+    <div>
+      <h1>Fullscreen an Element</h1>
+      <!-- Create an input -->
+      <input
+        type="text"
+        id="input-text"
+        class="form-control mb-2"
+        placeholder="Enter text"
+      />
+
+      <!-- The element to be fullscreened -->
+      <div id="fullscreen-element" class="p-2">
+        This is the fullscreen element.
+        <div id="input-output"></div>
+      </div>
+
+      <!-- Fullscreen Button -->
+      <div class="mt-2">
+        <button onclick="enterFullScreen()" class="btn btn-primary">
+          Fullscreen
+        </button>
+      </div>
+
+      <script>
+        const element = document.getElementById("fullscreen-element");
+        const input = document.getElementById("input-text");
+        const output = document.getElementById("input-output");
+
+        const enterFullScreen = () => {
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) {
+            // Firefox
+            element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) {
+            // Chrome, Safari, and Opera
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) {
+            // IE/Edge
+            element.msRequestFullscreen();
+          }
+        };
+
+        var fullscreenElement = null;
+        document.addEventListener("fullscreenchange", function () {
+          fullscreenElement =
+            document.fullscreenElement ||
+            document.mozFullScreenElement ||
+            document.webkitFullscreenElement ||
+            document.msFullscreenElement;
+        });
+
+        // Update the content of the fullscreen element with the input text
+        input.addEventListener("input", () => {
+          output.textContent = input.value;
+        });
+      </script>
+    </div>
+    <!-- <div id="wdi-host">
+      <link rel="stylesheet" href="../content.css">
+      <link rel="stylesheet" href="../templates/browser_action.min.css">
+      <div id="wdi-main" style="left: 25%; top: 25%">
+        <div id="wdi-close"></div>
+
+        <div id="wdi-meaning">
+          <div class="entry">
+            <div class="headword-box">
+              <span class="headword"> el·e·ment </span>
+              <span>
+                <span class="phonetics-text">ˈeləmənt</span>
+              </span>
+              <span>
+                <span
+                  class="audio"
+                  data-url="https://ssl.gstatic.com/dictionary/static/sounds/20220808/element--_us_1.mp3"
+                ></span>
+              </span>
+            </div>
+            <div class="sense-family">
+              <div class="poss"></div>
+              <div class="morph-units">
+                <span class="description">noun</span>
+                <span class="word-form">element</span>
+                <span class="description">plural noun</span>
+                <span class="word-form">elements</span>
+                <span class="description">noun</span>
+                <span class="word-form">chemical element</span>
+                <span class="description">plural noun</span>
+                <span class="word-form">chemical elements</span>
+                <span class="description">plural noun</span>
+                <span class="word-form">the elements</span>
+              </div>
+              <ol class="senses">
+                <li class="sense">
+                  <div>
+                    a part or aspect of something abstract, especially one that is
+                    essential or characteristic.
+                  </div>
+                  <div></div>
+                  <ul class="subsenses">
+                    <li class="subsense">
+                      <div class="definition">
+                        a small but significant presence of a feeling or abstract
+                        quality.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                    <li class="subsense">
+                      <div class="definition">
+                        the rudiments of a branch of knowledge.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                    <li class="subsense">
+                      <div class="definition">
+                        a group of people of a particular kind within a larger
+                        group or organization.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                    <li class="subsense">
+                      <div class="definition">
+                        (in church use) the bread and wine of the Eucharist.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                    <li class="subsense">
+                      <div class="definition">
+                        an entity that is a single member of a set.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                  </ul>
+                </li>
+                <li class="sense">
+                  <div>
+                    each of more than one hundred substances that cannot be
+                    chemically interconverted or broken down into simpler
+                    substances and are primary constituents of matter. Each
+                    element is distinguished by its atomic number, i.e. the number
+                    of protons in the nuclei of its atoms.
+                  </div>
+                  <div></div>
+                  <ul class="subsenses">
+                    <li class="subsense">
+                      <div class="definition">
+                        any of the four substances (earth, water, air, and fire)
+                        regarded as the fundamental constituents of the world in
+                        ancient and medieval philosophy.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                    <li class="subsense">
+                      <div class="definition">
+                        a person's or animal's natural or preferred environment.
+                      </div>
+                    </li>
+                    <div class="syns"></div>
+                  </ul>
+                </li>
+                <li class="sense">
+                  <div>
+                    the weather, especially strong winds, heavy rain, and other
+                    kinds of bad weather.
+                  </div>
+                  <div>
+                    <span class="nym"
+                      ><a class="nym-link" href="#">the weather</a></span
+                    >
+                    <span class="nym"
+                      ><a class="nym-link" href="#">the climate</a></span
+                    >
+                    <span class="nym"
+                      ><a class="nym-link" href="#"
+                        >meteorological conditions</a
+                      ></span
+                    >
+                    <span class="nym"
+                      ><a class="nym-link" href="#"
+                        >atmospheric conditions/forces</a
+                      ></span
+                    >
+                    <span class="nym"
+                      ><a class="nym-link" href="#">the wind</a></span
+                    >
+                    <span class="nym"
+                      ><a class="nym-link" href="#">the rain</a></span
+                    >
+                    <span class="nym"
+                      ><a class="nym-link" href="#">storms</a></span
+                    >
+                  </div>
+                  <ul class="subsenses"></ul>
+                </li>
+                <li class="sense">
+                  <div>
+                    a part in an electric teapot, heater, or stove that contains a
+                    wire through which an electric current is passed to provide
+                    heat.
+                  </div>
+                  <div></div>
+                  <ul class="subsenses"></ul>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div id="wdi-more" class="">
+          <a
+            target="_blank"
+            href="https://www.google.com/search?dictcorpus=en-US&amp;hl=en&amp;forcedict=material&amp;q=define material"
+            >More »
+          </a>
+        </div>
+      </div>
+      <div>
+        
+          <div id="wdi--arrow-main" style="top: 517.448px; left: 155.983px;">
+            <div id="wdi-arrow-inner-down"></div>
+            <div id="wdi-arrow-outer-down"></div>
+          </div>
+         
+      </div>
+      <audio
+        preload="true"
+        src="https://ssl.gstatic.com/dictionary/static/sounds/20220808/element--_us_1.mp3"
+      ></audio>
+    </div> -->
+  </body>
+</html>
