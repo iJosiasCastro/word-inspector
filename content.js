@@ -27,7 +27,7 @@
         chrome.runtime.sendMessage(
           { type: "fetch_raw", eventKey: 9, instanceId: 2, query: selectedWord, event },
           (params)=>{
-            handleSearchResult(params, event)
+            handleSearchResult(params, event, selection)
           }
         );
       }
@@ -68,8 +68,8 @@
   let meaning = document.createElement("div");
   meaning.id = "meaning";
 
-  const handleSearchResult = (result, event) => {
-    console.log(event)
+  const handleSearchResult = (result, event, selection) => {
+
     const container = document.createElement("div");
     container.id = "wdi-host";
     const shadowRoot = container.attachShadow({ mode: "open" });
@@ -84,20 +84,97 @@
     shadowRoot.innerHTML = /*html*/ `
       <style>${contentStyles}</style>
       <style>${browserActionStyles}</style>
-      <div id="wdi-main" style="left: ${event.clientX}px; top: ${event.clientY}px">
+      <div id="wdi-main">
           <div id="wdi-close"></div>
           ${render}
       </div>
       <div>
-        <!--
-        <div id="wdi--arrow-main" style="top: 517.448px; left: 155.983px;">
+        <div id="wdi-arrow-main">
           <div id="wdi-arrow-inner-down"></div>
           <div id="wdi-arrow-outer-down"></div>
         </div>
-        -->
       </div>
     `;
 
+    function PositionCoordinates(top, right, bottom, left) {
+      this.top = top;
+      this.right = right;
+      this.bottom = bottom;
+      this.left = left;
+    }
+    
+    var config = {
+      mainElement: shadowRoot.getElementById('wdi-main'),
+      shadowRoot: shadowRoot,
+      arrowElement1: shadowRoot.getElementById('wdi-arrow-main'),
+      arrowElement2: shadowRoot.getElementById('wdi-arrow-main'),
+      rangeBoundingRect: selection.getRangeAt(0).getBoundingClientRect()
+    };
+    
+    config.mainElement.style.left = "0";
+    config.mainElement.style.top = "0";
+    
+    var elementWidth = config.mainElement.offsetWidth;
+    var elementHeight = config.mainElement.offsetHeight;
+    var windowOffsets = [window.pageXOffset, window.pageYOffset];
+    var windowXOffset = windowOffsets[0];
+    var windowYOffset = windowOffsets[1];
+    var elementPosition = [config.rangeBoundingRect.left + windowXOffset, config.rangeBoundingRect.top + windowYOffset];
+    var elementBottom = config.rangeBoundingRect.bottom - config.rangeBoundingRect.top;
+    var elementCenterX = elementPosition[0] + (config.rangeBoundingRect.right - config.rangeBoundingRect.left) / 2;
+    var windowWidth = windowXOffset + document.documentElement.offsetWidth;
+    var elementLeft = elementCenterX - elementWidth / 2;
+    
+    if (elementLeft + elementWidth > windowWidth) {
+        elementLeft = windowWidth - elementWidth;
+    }
+    if (elementLeft < windowXOffset) {
+        elementLeft = windowXOffset;
+    }
+    var elementTop = elementPosition[1] - elementHeight - 12 + 1;
+    var elementBottom = elementPosition[1] + elementBottom + 12 - 1;
+    
+    var isOverlap = false;
+    var elementRect = new PositionCoordinates(elementTop, elementLeft + elementWidth, elementTop + elementHeight, elementLeft);
+    if (elementRect.top < window.pageYOffset) {
+        isOverlap = true;
+    } else {
+        var embedElements = document.getElementsByTagName("embed");
+        var objectElements = document.getElementsByTagName("object");
+        var pageOffsets = [window.pageXOffset, window.pageYOffset];
+        var pageXOffset = pageOffsets[0];
+        var pageYOffset = pageOffsets[1];
+    
+        for (var i = 0, len = embedElements.length + objectElements.length; i < len; i++) {
+            var element = (i < embedElements.length) ? embedElements[i] : objectElements[i - embedElements.length];
+            var elementBoundingRect = element.getBoundingClientRect();
+            elementBoundingRect = new PositionCoordinates(elementBoundingRect.top + pageYOffset, elementBoundingRect.right + pageXOffset, elementBoundingRect.bottom + pageYOffset, elementBoundingRect.left + pageXOffset);
+    
+            if (elementRect.bottom > elementBoundingRect.top && elementBoundingRect.bottom > elementRect.top && elementRect.left < elementBoundingRect.right && elementBoundingRect.left < elementRect.right) {
+                isOverlap = true;
+                break;
+            }
+        }
+    }
+    
+    if (isOverlap) {
+        elementTop = elementBottom - 1;
+        var resultElement = config.arrowElement2;
+        resultElement.style.top = elementBottom + "px";
+        resultElement.style.transform = "translateX(20px) rotate(180deg)";
+    } else {
+        var resultElement = config.arrowElement1;
+        resultElement.style.top = elementPosition[1] - 12 + "px";
+    }
+    var elementLeftPosition = elementCenterX - 12;
+    resultElement.style.left = elementLeftPosition + "px";
+    
+    if (elementLeftPosition - 5 > windowXOffset && elementLeftPosition + 24 + 5 < windowWidth) {
+        config.shadowRoot.appendChild(resultElement);
+    }
+    config.mainElement.style.top = elementTop + "px";
+    config.mainElement.style.left = elementLeft + "px";
+    
     const audioElements = shadowRoot.querySelectorAll(".audio");
     
     audioElements.forEach((element) => {
@@ -126,12 +203,9 @@
       }
     };
 
-    // Add a click event listener to the entire document
     document.addEventListener("click", clickHandler);
     shadowRoot.getElementById('wdi-close').addEventListener("click", closeDefinition )
     
-
-    // Listen fullscreen mode
     document.addEventListener("fullscreenchange", ()=>{
       closeDefinition();
     });
