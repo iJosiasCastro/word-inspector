@@ -64,6 +64,7 @@
     </div>
     {{/senseFamilies}}
   </div>
+  <iframe frameborder="0" height="75px" width="450px" scrolling="no" src="https://www.bing.com/images/search?q={{ queryTerm }}&wordinspector=true"></iframe>
   {{/subentries}}
   {{/entries}}
   
@@ -81,7 +82,7 @@
 <div id="wdi-more" class="">
   <a
       target="_blank"
-      href="https://www.google.com/search?dictcorpus=en-US&amp;hl=en&amp;forcedict=material&amp;q=define material"
+      href="https://www.google.com/search?dictcorpus=en-US&amp;hl=en&amp;forcedict={{ queryTerm }}&amp;q=define {{ queryTerm }}"
       >More »
   </a>
 </div>
