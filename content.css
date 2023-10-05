@@ -29,7 +29,6 @@ a:hover {
   padding-left: 9px;
   padding-right: 9px;
   position: absolute;
-  width: 500px;
   max-height: 200px;
 }
 #wdi-main:after {
@@ -109,7 +108,7 @@ a:hover {
 #wdi-attribution a {
   color: #073;
 }
-#wdi--arrow-main {
+#wdi-arrow-main {
   position: absolute;
   z-index: 99998;
 }
