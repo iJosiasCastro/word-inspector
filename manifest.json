@@ -11,7 +11,8 @@
    "content_scripts": [ {
       "all_frames": true,
       "js": [ "content.js" ],
-      "matches": [ "\u003Call_urls>" ]
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_start"
    } ],
    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://clients5.google.com https://apis.google.com https://cdnjs.cloudflare.com; object-src 'self'",
    "description": "Inspect a word easily as you browse the web.",
