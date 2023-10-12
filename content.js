@@ -82,7 +82,7 @@ const handleSearchResult = (result, event, selection, selectedWord) => {
 
   var render = null;
   var error = false;
-  if(result.error){
+  if(result?.error || result.entries?.[0].senseFamilies?.[0]?.senses?.[0] == undefined){
     error = true;
     render = /*html*/`
     <span>No definition found.</span>
@@ -101,7 +101,7 @@ const handleSearchResult = (result, event, selection, selectedWord) => {
     <style>${contentStyles}</style>
     <style>${browserActionStyles}</style>
     <div id="wdi-main" style="width: ${error ? 300 : 500}px">
-        <div id="wdi-close"></div>
+        <!-- <div id="wdi-close"></div> -->
         ${render}
     </div>
     <div>
@@ -111,6 +111,21 @@ const handleSearchResult = (result, event, selection, selectedWord) => {
       </div>
     </div>
   `;
+
+  console.log()
+  if (!error && result.entries?.[0].senseFamilies?.[0]?.partsOfSpeech?.[0]?.value == 'noun') {
+    const sensesElement = shadowRoot.querySelector('.sense-family');
+    let synonyms = result.entries[0].senseFamilies[0].senses[0].thesaurusEntries?.[0]?.synonyms.map(element => element.nyms[0].nym).join(" ");
+    synonyms = synonyms !== undefined ? synonyms : '';
+    if (sensesElement) {
+      sensesElement.innerHTML += /*html*/`
+        <iframe frameborder="0" height="75px" width="450px" scrolling="no" style="visibility:hidden;" onload="this.style.visibility='visible';"  id="imagesIframe"
+                src="https://www.bing.com/images/search?q=${result.queryTerm}&wordinspector=true">
+        </iframe>
+        `;
+    }
+  }
+
 
   function PositionCoordinates(top, right, bottom, left) {
     this.top = top;
@@ -237,95 +252,50 @@ const handleSearchResult = (result, event, selection, selectedWord) => {
 // Images bing
 var currentURL = window.location.href;
 if(currentURL.startsWith('https://www.bing.com/images/search?q=') && currentURL.includes('&wordinspector=true')){
+// if(currentURL.startsWith('https://www.shutterstock.com/search/') && currentURL.includes('&wordinspector=true')){
   let css = /*css*/`
-    div {
-      max-width: 450px;
-      display:   flex;
-      justify-content: space-between;
-      align-items: center;
-      overflow: hidden;
-    }
-    
-    div img {
-      height: 75px;
-      width: 24%;
-      object-fit: contain;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    body {
-      opacity: 0;
-      /* background-color: #ffd; */
-    }
-    
-    img::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      /* background-color: #ffd; */
-      color: currentColor;
-      display: block;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+  div {
+    max-width: 450px;
+    column-gap: 4px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  div img {
+    height: 75px;
+    width: auto;
+    max-width: 25%;
+    object-fit: cover;
+    display: block;
+    border-radius: 5px;
+  }
+  
+  body {
+    opacity: 0;
+    background-color: #ffd;
+  }
+  
+  img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: currentColor;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  
   `;
   var style = document.createElement("style");
   style.appendChild(document.createTextNode(css));
 
   (document.head || document.documentElement).appendChild(style);
-
-  // var link = document.createElement("link");
-  // link.href = src;
-  // link.type = "text/css";
-  // link.rel = "stylesheet";
-
-  // (document.head || document.documentElement).appendChild(link);
-
-  // var style = document.createElement("style");
-  // style.appendChild(document.createTextNode(/*css*/`
-  //     div {
-  //       max-width: 450px;
-  //       display: flex;
-  //       justify-content: space-between;
-  //       align-items: center;
-  //       overflow: hidden;
-  //     }
-      
-  //     div img {
-  //       height: 75px;
-  //       width: 24%;
-  //       object-fit: contain;
-  //       display: block;
-  //       margin-left: auto;
-  //       margin-right: auto;
-  //     }
-      
-  //     body {
-  //       opacity: 0;
-  //     }
-      
-  //     img::before {
-  //       content: '';
-  //       position: absolute;
-  //       top: 0;
-  //       left: 0;
-  //       bottom: 0;
-  //       right: 0;
-  //       color: currentColor;
-  //       display: block;
-  //       width: 100%;
-  //       height: 100%;
-  //       overflow: hidden;
-  //     }
-  // `));
-  // (document.head || document.documentElement).appendChild(style);
-
 
   document.addEventListener('DOMContentLoaded', function() {
     var mainElement = document.querySelector('[role="main"]');
