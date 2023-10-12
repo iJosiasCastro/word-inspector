@@ -4,6 +4,7 @@
   z-index: 99997;
 }
 * {
+  user-select: text !important; pointer-events: all !important;
   box-sizing: border-box;
 }
 a {
@@ -160,4 +161,8 @@ a:hover {
   border-radius: 20px;
   border: 6px solid transparent;
   background-clip: content-box;
+}
+
+iframe{
+  margin-bottom: 10px;
 }
